@@ -1,4 +1,4 @@
-transcript sorter based on the boilerplate set up by Maxim Egris.
+transcript sorter based on the boilerplate set up by Maxime Gris.
 
 
 git clone https://github.com/maximegris/angular-electron.git
