@@ -17,9 +17,15 @@ import { ElectronService } from './providers/electron.service';
 
 import { WebviewDirective } from './directives/webview.directive';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatCardModule, MatGridListModule, MatMenuModule, MatInputModule, MatButtonToggleModule, MatCheckboxModule } from '@angular/material';
+
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { MyDashboardComponent } from './my-dashboard/my-dashboard.component';
+
+
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -31,7 +37,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     HomeComponent,
     WebviewDirective,
-    MyDashboardComponent
+    MyDashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,7 +50,20 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: (HttpLoaderFactory),
         deps: [HttpClient]
       }
-    })
+    }),
+    BrowserAnimationsModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule,
+    MatCardModule,
+    MatGridListModule,
+    MatMenuModule,
+    MatInputModule,
+    MatButtonToggleModule,
+    MatCheckboxModule
   ],
   providers: [ElectronService],
   bootstrap: [AppComponent]

@@ -1,0 +1,66 @@
+  
+  
+  .grid-container {
+    margin: 20px;
+  }
+  
+  .mat-toolbar .mat-checkbox {
+    font-size:12px;
+    color:orange;
+    margin: 0 10px;
+  }
+  
+  .mat-card {
+    background-color:#546E7A;
+    color: #fff;
+  }
+  
+  .mat-card-title {
+    /*background-color:#ffde03;*/
+    color: #ffde03;
+    margin: 0 20px;
+    cursor:grab;
+  }
+  
+  
+  .dashboard-card {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+  }
+  
+  .more-button {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+  }
+  
+  .dashboard-card-content {
+    text-align: center;
+    font-size: 36px;
+  }
+  
+  .title-center {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  
+  .keyword-form {
+    width: 200px;
+  }
+  
+  
+  .keyword-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+  
+  .keyword-margin {
+    margin: 0 30px;
+  }
+  
+  
