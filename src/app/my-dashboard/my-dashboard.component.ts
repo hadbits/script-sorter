@@ -236,13 +236,13 @@ export class MyDashboardComponent  {
 
 
   addKeyword() {
-    if (this.latestKeyword != "" && !this.keywords.indexOf(this.latestKeyword)) {
+    if (this.latestKeyword != "" && !this.keywords.includes(this.latestKeyword)) {
       this.keywords.push(this.latestKeyword);
       this.assignKeywordToCurrentEntry(this.keywords.length-1, true);
       this.transcription.keywords.push(this.latestKeyword);
       this.latestKeyword = "";      
     }
-    //console.log(this.keywords);    
+    console.log(this.keywords);    
   };
 
   assignKeywordToCurrentEntry(pressedKey : number, isAssign: boolean) {
@@ -266,7 +266,7 @@ export class MyDashboardComponent  {
       this.transcription.content[this.currentEntityIndex].keywords = kwds;
     }
 
-    //console.log(this.transcription);
+    console.log(this.transcription);
 
   }
 
