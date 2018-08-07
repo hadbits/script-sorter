@@ -1,0 +1,43 @@
+<app-header-toolbar (fileRead)="onFileRead($event)" [updatedFile]="transcription"></app-header-toolbar>
+
+
+
+<div class="grid-container">
+
+  <mat-form-field class="keyword-form-field" *ngIf="keywords" >
+      <input matInput type="text" placeholder="Add Keyword" [(ngModel)]="latestKeyword" (keyup.enter)="addKeyword()">
+      <button mat-button  matSuffix mat-icon-button aria-label="Add Keyword" (click)="addKeyword()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-form-field>
+
+  <mat-grid-list cols="1" rowHeight="350px">
+    <!-- <mat-grid-tile *ngFor="let card of cards"> -->
+    <mat-grid-tile>
+      <mat-card class="dashboard-card" *ngIf="currentEntry">
+        <mat-card-header>
+          <mat-card-title color="accent">
+            <h3 class="mat-h2" (click)="copyTimestamp()" >{{currentEntry.startTime}}</h3>
+            <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button mat-menu-item>Remove</button>
+            </mat-menu>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="dashboard-card-content">
+          <div>{{currentEntry.text}}</div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+
+  <mat-grid-list class="keyword-checkboxes" cols="3" rowHeight="3:1">
+    <mat-grid-tile *ngFor="let keyword of keywords; index as i" >
+      <mat-checkbox class="keyword-margin" [checked]="isKeywordAssigned(keyword)" (change)="isKeywordChecked(i, $event)"  ><div class="keyword-number">{{i}}</div> {{keyword}}</mat-checkbox>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+</div>

@@ -19,11 +19,25 @@ import { WebviewDirective } from './directives/webview.directive';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
-import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatCardModule, MatGridListModule, MatMenuModule, MatInputModule, MatButtonToggleModule, MatCheckboxModule } from '@angular/material';
+import {  MatToolbarModule, 
+          MatButtonModule, 
+          MatSidenavModule, 
+          MatIconModule, 
+          MatListModule, 
+          MatCardModule, 
+          MatGridListModule, 
+          MatMenuModule, 
+          MatInputModule, 
+          MatButtonToggleModule, 
+          MatCheckboxModule, 
+          MatTableModule, 
+          MatTableDataSource } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { MyDashboardComponent } from './my-dashboard/my-dashboard.component';
+import { MyDashboardComponent } from './components/my-dashboard/my-dashboard.component';
+import { KeywordViewComponent } from './components/keyword-view/keyword-view.component';
+import { HeaderToolbarComponent } from './components/header-toolbar/header-toolbar.component';
 
 
 
@@ -38,6 +52,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     HomeComponent,
     WebviewDirective,
     MyDashboardComponent,
+    KeywordViewComponent,
+    HeaderToolbarComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +79,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatMenuModule,
     MatInputModule,
     MatButtonToggleModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTableModule,
+    //MatTableDataSource
   ],
   providers: [ElectronService],
   bootstrap: [AppComponent]

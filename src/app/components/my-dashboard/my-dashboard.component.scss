@@ -4,12 +4,41 @@
     margin: 20px;
   }
   
+
+
   .mat-toolbar .mat-checkbox {
     font-size:12px;
     color:orange;
     margin: 0 10px;
+
+    background-color : transparent;
+    padding: inherit;
+    color: inherit;
+    box-shadow: inherit; 
   }
-  
+
+  .keyword-checkboxes {
+    background-color: teal;
+  }
+
+  mat-checkbox {
+    font-size: 18px;
+    border-radius: 4px;
+    /*border: 1px solid #AAA;*/
+    background-color: lightgray;
+    padding: 10px;
+    color: #333;
+    box-shadow: 1px 2px 2px;
+  }
+
+  .mat-checkbox-checked {
+    /*border: 1px solid gray;*/
+    border-radius: 4px;
+    background-color: lightblue;
+    color: #000000;
+    box-shadow: -1px -1px 1px
+  }
+
   .mat-card {
     background-color:#546E7A;
     color: #fff;
@@ -60,7 +89,22 @@
   }
   
   .keyword-margin {
-    margin: 0 30px;
+    margin: 15px 15px;
   }
   
+  .keyword-number {
+    font-size: 50px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    margin: 10px 10px;
+    opacity: .75;
+  }
+
   
+  .read-only-mode {
+    background-color : transparent;
+    padding: inherit;
+    color: inherit;
+    box-shadow: inherit;    
+  }

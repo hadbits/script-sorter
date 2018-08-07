@@ -1,22 +1,20 @@
-import { Component, HostListener  } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { clipboard, ipcRenderer, dialog, remote} from 'electron';
-import { Transcription} from '../models/transcription';
-import { ScriptEntity} from '../models/script-entity';
+import { Transcription} from '../../models/transcription';
+import { ScriptEntity} from '../../models/script-entity';
 
 import * as fs from 'fs';
 
 
 @Component({
-  selector: 'my-dashboard',
-  templateUrl: './my-dashboard.component.html',
-  styleUrls: ['./my-dashboard.component.scss']
+  selector: 'app-header-toolbar',
+  templateUrl: './header-toolbar.component.html',
+  styleUrls: ['./header-toolbar.component.scss']
 })
-export class MyDashboardComponent  {
-  /** Based on the screen size, switch from standard to one column per row */
+export class HeaderToolbarComponent implements OnInit {
 
-  //ipcRndr : ipcRenderer;
+  @Output() fileRead = new EventEmitter<Transcription>();
+  @Input()  updatedFile : Transcription;
 
   cards : any[];
   isReadOnly : boolean;
@@ -27,35 +25,22 @@ export class MyDashboardComponent  {
   currentEntityIndex: number;
   keywords : string[];
 
+
   //jsnContent : any = {};
   transcription : Transcription;
 
   currentEntry : any;
   latestKeyword : string;
 
-  pressedKey : any;
-
-
-  constructor(private breakpointObserver: BreakpointObserver) {
-
+  constructor() { 
     this.isReadOnly = true;
     
     this.transcription = new Transcription;
     this.keywords = [];
-    this.latestKeyword = "";
 
-
-    console.log(this.cards);
-    console.log(ipcRenderer);
-
-}
-
-
-
-
+  }
 
   ngOnInit() {
-
     this.readOpenedFile();
 
   };
@@ -81,6 +66,9 @@ export class MyDashboardComponent  {
       let content: string = response.toString();
       //console.log(content);
 
+      this.transcription = new Transcription;
+      this.keywords = [];
+
       try {
           let fileContent : any = JSON.parse(content);
 
@@ -94,6 +82,9 @@ export class MyDashboardComponent  {
             this.isReadOnly = true;
 
             //console.log(this.transcription);
+
+            this.fileRead.emit(this.transcription);
+
 
             return true;
           }
@@ -155,10 +146,15 @@ export class MyDashboardComponent  {
 
 
       this.cards = this.transcription.content;
-      //console.log(this.cards);
+      console.log("Emitting fileread event");
 
+      this.fileRead.emit(this.transcription);
 
     });
+
+
+
+
   }
 
   saveFile () {
@@ -174,7 +170,7 @@ export class MyDashboardComponent  {
       },
       (filename, bookmark) =>  {
         // fileName is a string that contains the path and filename created in the save file dialog.  
-        fs.writeFile(filename, JSON.stringify(this.transcription), (err) => {
+        fs.writeFile(filename, JSON.stringify(this.updatedFile), (err) => {
           if(err){
               alert("An error ocurred creating the file "+ err.message)
           }                      
@@ -190,99 +186,4 @@ export class MyDashboardComponent  {
     console.log("File Opened captured");
   }
 
-  copyTimestamp() {
-    clipboard.writeText(this.currentEntry.startTime);   
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) { 
-    this.pressedKey = event.key;
-    //console.log(this.pressedKey);
-
-    
-    switch (this.pressedKey) {
-      case 'ArrowUp':
-      case 'ArrowLeft': 
-        this.currentEntityIndex--;
-        if (this.currentEntityIndex < 0) {this.currentEntityIndex = 0;}
-        this.currentEntry = this.transcription.content[this.currentEntityIndex];
-        break;
-      case 'ArrowRight': 
-      case 'ArrowDown': 
-        this.currentEntityIndex++;
-        if (this.currentEntityIndex > this.transcription.content.length - 1) {this.currentEntityIndex = this.transcription.content.length - 1;}
-        this.currentEntry = this.transcription.content[this.currentEntityIndex];
-        break; 
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-      case '9':
-      case '0':
-
-        this.assignKeywordToCurrentEntry(parseInt(this.pressedKey), true);
-
-        //console.log(this.transcription.content);
-        break;
-
-    }
-
-  }
-  
-
-
-  addKeyword() {
-    if (this.latestKeyword != "" && !this.keywords.includes(this.latestKeyword)) {
-      this.keywords.push(this.latestKeyword);
-      this.assignKeywordToCurrentEntry(this.keywords.length-1, true);
-      this.transcription.keywords.push(this.latestKeyword);
-      this.latestKeyword = "";      
-    }
-    console.log(this.keywords);    
-  };
-
-  assignKeywordToCurrentEntry(pressedKey : number, isAssign: boolean) {
-    //console.log(pressedKey);
-    if (isAssign) {
-      if (this.transcription.content.length > 0 && this.keywords.length >= pressedKey) {
-        //console.log(this.transcription.content[this.currentEntityIndex].keywords);
-        if (this.transcription.content[this.currentEntityIndex].keywords != "") {
-          this.transcription.content[this.currentEntityIndex].keywords += "," + this.keywords[pressedKey];
-        }
-        else {
-          this.transcription.content[this.currentEntityIndex].keywords = this.keywords[pressedKey];
-        }
-      }
-    }
-    else {
-      let kwds : String = this.transcription.content[this.currentEntityIndex].keywords;
-      kwds += ",";
-      kwds = kwds.replace(this.keywords[pressedKey] + ",", "");
-      kwds = kwds.slice(0, -1);
-      this.transcription.content[this.currentEntityIndex].keywords = kwds;
-    }
-
-    console.log(this.transcription);
-
-  }
-
-
-  isKeywordChecked(index: number, event : any) {
-    console.log(event.checked); 
-    if (event.checked) {
-      this.assignKeywordToCurrentEntry(index, true);
-    }
-    else {
-      this.assignKeywordToCurrentEntry(index, false);
-    }
-    
-  }
-
-
-
 }
-
