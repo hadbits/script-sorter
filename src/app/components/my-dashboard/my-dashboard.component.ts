@@ -4,6 +4,7 @@ import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/l
 import { clipboard, ipcRenderer, dialog, remote} from 'electron';
 import { Transcription} from '../../models/transcription';
 import { ScriptEntity} from '../../models/script-entity';
+import { TranscriptionDataService } from "../../providers/transcription-data.service" 
 
 import * as fs from 'fs';
 
@@ -18,6 +19,8 @@ export class MyDashboardComponent  {
 
   //ipcRndr : ipcRenderer;
 
+  transcriptionSubscription : any;
+  
   cards : any[];
   isReadOnly : boolean;
 
@@ -36,7 +39,7 @@ export class MyDashboardComponent  {
   pressedKey : any;
 
 
-  constructor(private breakpointObserver: BreakpointObserver) {
+  constructor(private breakpointObserver: BreakpointObserver, private transcriptionDataService : TranscriptionDataService) {
 
     /*this.isReadOnly = true;
     
@@ -48,6 +51,8 @@ export class MyDashboardComponent  {
     console.log(this.cards);
     console.log(ipcRenderer);
 
+
+
 }
 
 
@@ -55,8 +60,11 @@ export class MyDashboardComponent  {
 
 
   ngOnInit() {
-
-
+    console.log("init");
+    this.transcriptionDataService.getTransciption().subscribe((obj) => {
+      console.log("dasdboard");
+      if (obj)  {this.onFileRead(obj );}
+    });
   };
 
 

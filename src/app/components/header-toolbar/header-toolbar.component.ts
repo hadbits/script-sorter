@@ -5,6 +5,9 @@ import { ScriptEntity} from '../../models/script-entity';
 
 import * as fs from 'fs';
 
+import { TranscriptionDataService } from "../../providers/transcription-data.service" 
+
+
 
 @Component({
   selector: 'app-header-toolbar',
@@ -13,7 +16,7 @@ import * as fs from 'fs';
 })
 export class HeaderToolbarComponent implements OnInit {
 
-  @Output() fileRead = new EventEmitter<Transcription>();
+  //@Output() fileRead = new EventEmitter<Transcription>();
   @Input()  updatedFile : Transcription;
 
   cards : any[];
@@ -41,7 +44,8 @@ export class HeaderToolbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.readOpenedFile();
+    this.shareOpenedFile();
+    //this.readOpenedFile();
 
   };
 
@@ -52,6 +56,106 @@ export class HeaderToolbarComponent implements OnInit {
     ipcRenderer.send('open-file-dialog')
      //this.ipcRndr.send('open-file-dialog')
      //openSRTFile();
+  }
+
+  shareOpenedFile() {
+
+    ipcRenderer.on('fileOpened', (event, response) => { 
+      
+      let content: string = response.toString();
+
+      this.transcription = new Transcription;
+      this.keywords = [];
+
+      let tsd = new TranscriptionDataService();
+
+      try {
+          let fileContent : any = JSON.parse(content);
+
+          if (fileContent && fileContent.content && fileContent.keywords) {
+            this.transcription = fileContent;
+            this.keywords = this.transcription.keywords;
+            
+            this.currentEntityIndex = 0;
+            this.currentEntry = this.transcription.content[this.currentEntityIndex];
+
+            this.isReadOnly = true;
+
+            //console.log(this.transcription);
+
+            tsd.updateTranscription(this.transcription)
+
+            //this.fileRead.emit(this.transcription);
+            return true;
+          }
+
+      } catch (e) {
+          //return false;
+      }
+
+
+
+     //this.transcription.content = [];
+     this.keywords = [];
+     this.latestKeyword = "";
+     
+     this.arrEntities = content.split(/\n(?=\d{2}:)/i) ;        
+
+     
+     this.arrEntities.forEach((entity, i) => {
+       this.arrTimeText = entity.split(/\n(?=.*)/i)
+       //let item = {id: i, startTime: "", endTime : "", text : "", keywords : ""};
+       let item : ScriptEntity;
+       item = new ScriptEntity();
+       item.id = i;
+       item.keywords = "";
+
+       this.arrTimeText.forEach((timeText, k) => {
+         if (timeText != "" && timeText.search(/\d{2}:/i) > -1) {
+           this.arrTime = timeText.split(/\s+/i);            
+           //console.log(this.arrTime);
+           
+           this.arrTime.forEach((time, t) => {
+
+             if (item.startTime != null && time.search(/\d{2}:/i) > -1) {    //if first startTme is set, then set end time
+               item.endTime = time;
+             }
+             else if (item.startTime == null && time.search(/\d{2}:/i) > -1) {   //set first date found to startTime
+               item.startTime = time;
+             }
+
+
+             //if (time.search(/\d{2}:/i) > -1) {}
+           });
+         }
+         else if (timeText.search(/\S/i) > -1) {
+           item.text = timeText;
+         }
+       });
+
+       
+
+       this.transcription.content.push(item);
+
+       this.currentEntityIndex = 0;
+       this.currentEntry = this.transcription.content[this.currentEntityIndex];
+
+       this.isReadOnly = false;
+
+
+     });
+
+     //console.log(this.transcription);
+
+     this.cards = this.transcription.content;
+     tsd.updateTranscription(this.transcription);
+
+     //this.fileRead.emit(this.transcription);
+
+   });
+
+
+
   }
 
 
@@ -83,7 +187,7 @@ export class HeaderToolbarComponent implements OnInit {
 
             //console.log(this.transcription);
 
-            this.fileRead.emit(this.transcription);
+            //this.fileRead.emit(this.transcription);
 
 
             return true;
@@ -148,7 +252,7 @@ export class HeaderToolbarComponent implements OnInit {
       this.cards = this.transcription.content;
       console.log("Emitting fileread event");
 
-      this.fileRead.emit(this.transcription);
+      //this.fileRead.emit(this.transcription);
 
     });
 

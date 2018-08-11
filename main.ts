@@ -1,9 +1,12 @@
 import { app, BrowserWindow, screen, Menu, dialog, ipcMain, ipcRenderer, globalShortcut } from 'electron';
+//import { Injectable, ReflectiveInjector } from '@angular/core';
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
 //import { AppComponent } from './src/app/app.component';
 //import { MyDashboardComponent } from './src/app/my-dashboard/my-dashboard.component';
+
+//import { TranscriptionDataService } from "./src/app/providers/transcription-data.service" 
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -172,6 +175,7 @@ function showDevTools() {
 
 ipcMain.on('open-file-dialog', function(event, data){
 
+
   let selectedFilePaths = dialog.showOpenDialog(
       {
         properties: ['openFile'],
@@ -193,6 +197,15 @@ ipcMain.on('open-file-dialog', function(event, data){
     console.log("file has been read");
     
     if (event && event.sender) {
+
+      //console.log(data.toString());
+
+      /*let tsd = new TranscriptionDataService();
+      tsd.updateTranscription(data.toString())*/
+
+      /*let injector = ReflectiveInjector.resolveAndCreate([TranscriptionDataService]);
+      let tsd =  injector.get(TranscriptionDataService);*/
+      
       event.sender.send('fileOpened', data);
     }
     else {

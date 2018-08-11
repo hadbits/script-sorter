@@ -1,10 +1,8 @@
-<app-header-toolbar (fileRead)="onFileRead($event)" [updatedFile]="transcription"></app-header-toolbar>
 
 
+<div class="grid-container" *ngIf="currentEntry">
 
-<div class="grid-container">
-
-  <mat-form-field class="keyword-form-field" *ngIf="keywords" >
+  <mat-form-field class="keyword-form-field"  >
       <input matInput type="text" placeholder="Add Keyword" [(ngModel)]="latestKeyword" (keyup.enter)="addKeyword()">
       <button mat-button  matSuffix mat-icon-button aria-label="Add Keyword" (click)="addKeyword()">
         <mat-icon>add</mat-icon>

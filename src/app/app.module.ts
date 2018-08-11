@@ -38,6 +38,7 @@ import { HomeComponent } from './components/home/home.component';
 import { MyDashboardComponent } from './components/my-dashboard/my-dashboard.component';
 import { KeywordViewComponent } from './components/keyword-view/keyword-view.component';
 import { HeaderToolbarComponent } from './components/header-toolbar/header-toolbar.component';
+import { TranscriptionDataService } from './providers/transcription-data.service';
 
 
 
@@ -83,7 +84,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatTableModule,
     //MatTableDataSource
   ],
-  providers: [ElectronService],
+  providers: [
+    ElectronService,
+    TranscriptionDataService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
