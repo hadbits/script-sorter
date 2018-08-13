@@ -4,9 +4,9 @@ import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/l
 import { clipboard, ipcRenderer, dialog, remote} from 'electron';
 import { Transcription} from '../../models/transcription';
 import { ScriptEntity} from '../../models/script-entity';
-import { TranscriptionDataService } from "../../providers/transcription-data.service" 
 
 import * as fs from 'fs';
+import { TranscriptionDataService } from '../../providers/transcription-data.service';
 
 
 @Component({
@@ -16,8 +16,6 @@ import * as fs from 'fs';
 })
 export class MyDashboardComponent  {
   /** Based on the screen size, switch from standard to one column per row */
-
-  //ipcRndr : ipcRenderer;
 
   transcriptionSubscription : any;
   
@@ -30,7 +28,6 @@ export class MyDashboardComponent  {
   currentEntityIndex: number;
   keywords : string[];
 
-  //jsnContent : any = {};
   transcription : Transcription;
 
   currentEntry : any;
@@ -39,37 +36,24 @@ export class MyDashboardComponent  {
   pressedKey : any;
 
 
-  constructor(private breakpointObserver: BreakpointObserver, private transcriptionDataService : TranscriptionDataService) {
-
-    /*this.isReadOnly = true;
+  constructor(private breakpointObserver: BreakpointObserver, private transcriptionDataSvc : TranscriptionDataService) {
     
-    this.transcription = new Transcription;
-    this.keywords = [];
-    this.latestKeyword = "";
-    */
-
     console.log(this.cards);
     console.log(ipcRenderer);
 
-
-
-}
-
-
-
-
+  }
 
   ngOnInit() {
-    console.log("init");
-    this.transcriptionDataService.getTransciption().subscribe((obj) => {
-      console.log("dasdboard");
-      if (obj)  {this.onFileRead(obj );}
+    this.transcriptionDataSvc.currentTranscription.subscribe((trnscrpt) => {
+      if (trnscrpt)  {
+        this.onFileRead(trnscrpt);
+      }
     });
   };
 
 
   onFileRead( transcription : Transcription) {
-    console.log("handler onFileRead")
+
     this.transcription = transcription;
 
     this.keywords = this.transcription.keywords;
@@ -87,7 +71,7 @@ export class MyDashboardComponent  {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
     this.pressedKey = event.key;
-    console.log(this.pressedKey);
+    //console.log(this.pressedKey);
 
     
     switch (this.pressedKey) {
@@ -116,7 +100,6 @@ export class MyDashboardComponent  {
 
         this.assignKeywordToCurrentEntry(parseInt(this.pressedKey), true);
 
-        //console.log(this.transcription.content);
         break;
 
     }
@@ -129,18 +112,15 @@ export class MyDashboardComponent  {
     if (this.latestKeyword != "" && !this.keywords.includes(this.latestKeyword)) {
       this.keywords.push(this.latestKeyword);
       this.assignKeywordToCurrentEntry(this.keywords.length-1, true);
-      //this.transcription.keywords.push(this.latestKeyword);
       this.latestKeyword = "";      
     }
-    console.log(this.keywords);    
+    //console.log(this.keywords);    
   };
 
   assignKeywordToCurrentEntry(pressedKey : number, isAssign: boolean) {
-    //console.log(pressedKey);
     let kwds : String = this.transcription.content[this.currentEntityIndex].keywords;
     if (isAssign) {
       if (this.transcription.content.length > 0 && this.keywords.length > pressedKey) {
-        //console.log(this.transcription.content[this.currentEntityIndex].keywords);
         if (kwds == "") {
           kwds = this.keywords[pressedKey];
         }
@@ -164,13 +144,13 @@ export class MyDashboardComponent  {
     }
 
     this.transcription.content[this.currentEntityIndex].keywords = kwds;
+    this.transcriptionDataSvc.updateTranscription(this.transcription);
     console.log(this.transcription);
 
   }
 
 
   isKeywordChecked(index: number, event : any) {
-    console.log(event.checked); 
     if (event.checked) {
       this.assignKeywordToCurrentEntry(index, true);
     }

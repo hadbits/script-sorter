@@ -4,9 +4,7 @@ import { Transcription} from '../../models/transcription';
 import { ScriptEntity} from '../../models/script-entity';
 
 import * as fs from 'fs';
-
-import { TranscriptionDataService } from "../../providers/transcription-data.service" 
-
+import { TranscriptionDataService } from '../../providers/transcription-data.service';
 
 
 @Component({
@@ -16,8 +14,6 @@ import { TranscriptionDataService } from "../../providers/transcription-data.ser
 })
 export class HeaderToolbarComponent implements OnInit {
 
-  //@Output() fileRead = new EventEmitter<Transcription>();
-  @Input()  updatedFile : Transcription;
 
   cards : any[];
   isReadOnly : boolean;
@@ -35,7 +31,7 @@ export class HeaderToolbarComponent implements OnInit {
   currentEntry : any;
   latestKeyword : string;
 
-  constructor() { 
+  constructor(private transcriptionDataSvc : TranscriptionDataService ) { 
     this.isReadOnly = true;
     
     this.transcription = new Transcription;
@@ -45,17 +41,14 @@ export class HeaderToolbarComponent implements OnInit {
 
   ngOnInit() {
     this.shareOpenedFile();
-    //this.readOpenedFile();
 
   };
 
 
   OpenFile (event) {
 
-    console.log("Open dialog by button");
+    //console.log("Open dialog by button");
     ipcRenderer.send('open-file-dialog')
-     //this.ipcRndr.send('open-file-dialog')
-     //openSRTFile();
   }
 
   shareOpenedFile() {
@@ -67,7 +60,6 @@ export class HeaderToolbarComponent implements OnInit {
       this.transcription = new Transcription;
       this.keywords = [];
 
-      let tsd = new TranscriptionDataService();
 
       try {
           let fileContent : any = JSON.parse(content);
@@ -81,21 +73,17 @@ export class HeaderToolbarComponent implements OnInit {
 
             this.isReadOnly = true;
 
-            //console.log(this.transcription);
 
-            tsd.updateTranscription(this.transcription)
+            this.transcriptionDataSvc.updateTranscription(this.transcription)
 
-            //this.fileRead.emit(this.transcription);
             return true;
           }
 
       } catch (e) {
-          //return false;
       }
 
 
 
-     //this.transcription.content = [];
      this.keywords = [];
      this.latestKeyword = "";
      
@@ -104,7 +92,6 @@ export class HeaderToolbarComponent implements OnInit {
      
      this.arrEntities.forEach((entity, i) => {
        this.arrTimeText = entity.split(/\n(?=.*)/i)
-       //let item = {id: i, startTime: "", endTime : "", text : "", keywords : ""};
        let item : ScriptEntity;
        item = new ScriptEntity();
        item.id = i;
@@ -113,7 +100,6 @@ export class HeaderToolbarComponent implements OnInit {
        this.arrTimeText.forEach((timeText, k) => {
          if (timeText != "" && timeText.search(/\d{2}:/i) > -1) {
            this.arrTime = timeText.split(/\s+/i);            
-           //console.log(this.arrTime);
            
            this.arrTime.forEach((time, t) => {
 
@@ -145,12 +131,10 @@ export class HeaderToolbarComponent implements OnInit {
 
      });
 
-     //console.log(this.transcription);
 
      this.cards = this.transcription.content;
-     tsd.updateTranscription(this.transcription);
+     this.transcriptionDataSvc.updateTranscription(this.transcription)
 
-     //this.fileRead.emit(this.transcription);
 
    });
 
@@ -158,108 +142,6 @@ export class HeaderToolbarComponent implements OnInit {
 
   }
 
-
-  readOpenedFile()  {
-
-    ipcRenderer.on('fileOpened', (event, response) => {
-      //console.log(event);
-      //console.log(response);
-
-      //console.log("File Opened captured");
-
-      let content: string = response.toString();
-      //console.log(content);
-
-      this.transcription = new Transcription;
-      this.keywords = [];
-
-      try {
-          let fileContent : any = JSON.parse(content);
-
-          if (fileContent && fileContent.content && fileContent.keywords) {
-            this.transcription = fileContent;
-            this.keywords = this.transcription.keywords;
-            
-            this.currentEntityIndex = 0;
-            this.currentEntry = this.transcription.content[this.currentEntityIndex];
-
-            this.isReadOnly = true;
-
-            //console.log(this.transcription);
-
-            //this.fileRead.emit(this.transcription);
-
-
-            return true;
-          }
-
-      } catch (e) {
-          //return false;
-      }
-
-
-      //this.transcription.content = [];
-      this.keywords = [];
-      this.latestKeyword = "";
-      
-      this.arrEntities = content.split(/\n(?=\d{2}:)/i) ;        
-
-      
-      this.arrEntities.forEach((entity, i) => {
-        this.arrTimeText = entity.split(/\n(?=.*)/i)
-        //let item = {id: i, startTime: "", endTime : "", text : "", keywords : ""};
-        let item : ScriptEntity;
-        item = new ScriptEntity();
-        item.id = i;
-        item.keywords = "";
-
-        this.arrTimeText.forEach((timeText, k) => {
-          if (timeText != "" && timeText.search(/\d{2}:/i) > -1) {
-            this.arrTime = timeText.split(/\s+/i);            
-            //console.log(this.arrTime);
-            
-            this.arrTime.forEach((time, t) => {
-
-              if (item.startTime != null && time.search(/\d{2}:/i) > -1) {    //if first startTme is set, then set end time
-                item.endTime = time;
-              }
-              else if (item.startTime == null && time.search(/\d{2}:/i) > -1) {   //set first date found to startTime
-                item.startTime = time;
-              }
-
-
-              //if (time.search(/\d{2}:/i) > -1) {}
-            });
-          }
-          else if (timeText.search(/\S/i) > -1) {
-            item.text = timeText;
-          }
-        });
-
-        
-
-        this.transcription.content.push(item);
-
-        this.currentEntityIndex = 0;
-        this.currentEntry = this.transcription.content[this.currentEntityIndex];
-
-        this.isReadOnly = false;
-
-
-      });
-
-
-      this.cards = this.transcription.content;
-      console.log("Emitting fileread event");
-
-      //this.fileRead.emit(this.transcription);
-
-    });
-
-
-
-
-  }
 
   saveFile () {
 
@@ -274,7 +156,7 @@ export class HeaderToolbarComponent implements OnInit {
       },
       (filename, bookmark) =>  {
         // fileName is a string that contains the path and filename created in the save file dialog.  
-        fs.writeFile(filename, JSON.stringify(this.updatedFile), (err) => {
+        fs.writeFile(filename, JSON.stringify(this.transcription ), (err) => {
           if(err){
               alert("An error ocurred creating the file "+ err.message)
           }                      
@@ -286,8 +168,8 @@ export class HeaderToolbarComponent implements OnInit {
 
   } 
 
-  fileOpened(event, response) {
-    console.log("File Opened captured");
-  }
+  // fileOpened(event, response) {
+  //   console.log("File Opened captured");
+  // }
 
 }

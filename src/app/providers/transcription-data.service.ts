@@ -9,24 +9,17 @@ export class TranscriptionDataService {
 
   
   transcriotionSource = new BehaviorSubject<Transcription>(null);
-  //currentTranscription : Observable<Transcription>  = this.transcriotionSource.asObservable();
+  currentTranscription  = this.transcriotionSource.asObservable();
 
 
   constructor() { }
 
-  getTransciption(): Observable<Transcription> {
-    return this.transcriotionSource.asObservable();
-  }
 
   updateTranscription(transcription : Transcription)  {
 
-
-    console.log("TranscriptionDataService");
-    
+    console.log("TranscriptionDataService");    
     this.transcriotionSource.next(transcription);
 
-
-    //return "updateTranscription";
 
   }
 

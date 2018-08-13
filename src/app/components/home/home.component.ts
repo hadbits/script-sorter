@@ -8,12 +8,12 @@ import { TranscriptionDataService } from '../../providers/transcription-data.ser
 })
 export class HomeComponent implements OnInit {
 
-  constructor( private transcriptionDataService : TranscriptionDataService) { }
+  constructor( private transcriptionDataSvc : TranscriptionDataService ) { }
 
   ngOnInit() {
-    console.log("Home init");
-    this.transcriptionDataService.getTransciption().subscribe((obj) => {
-      console.log("home gets transciption");      
+    //console.log("Home init");
+    this.transcriptionDataSvc.currentTranscription.subscribe((obj) => {
+      //console.log("home gets transciption");      
     });
   };
 
