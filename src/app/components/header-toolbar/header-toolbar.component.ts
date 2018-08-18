@@ -32,7 +32,7 @@ export class HeaderToolbarComponent implements OnInit {
   latestKeyword : string;
 
   constructor(private transcriptionDataSvc : TranscriptionDataService ) { 
-    this.isReadOnly = true;
+    this.isReadOnly = false;
     
     this.transcription = new Transcription;
     this.keywords = [];
@@ -43,6 +43,12 @@ export class HeaderToolbarComponent implements OnInit {
     this.shareOpenedFile();
 
   };
+
+  switchReadOnly(event) {
+    console.log(event);
+    this.isReadOnly = event.checked;
+    this.transcriptionDataSvc.setReadOnlyStatus(this.isReadOnly)    
+  }
 
 
   OpenFile (event) {
@@ -70,11 +76,12 @@ export class HeaderToolbarComponent implements OnInit {
             
             this.currentEntityIndex = 0;
             this.currentEntry = this.transcription.content[this.currentEntityIndex];
+            this.transcription.currentEntity = this.currentEntityIndex;
 
-            this.isReadOnly = true;
-
+            this.isReadOnly = true;        
 
             this.transcriptionDataSvc.updateTranscription(this.transcription)
+            this.transcriptionDataSvc.setReadOnlyStatus(this.isReadOnly)
 
             return true;
           }
@@ -125,6 +132,8 @@ export class HeaderToolbarComponent implements OnInit {
 
        this.currentEntityIndex = 0;
        this.currentEntry = this.transcription.content[this.currentEntityIndex];
+       this.transcription.currentEntity = this.currentEntityIndex;
+
 
        this.isReadOnly = false;
 
@@ -134,6 +143,7 @@ export class HeaderToolbarComponent implements OnInit {
 
      this.cards = this.transcription.content;
      this.transcriptionDataSvc.updateTranscription(this.transcription)
+     this.transcriptionDataSvc.setReadOnlyStatus(this.isReadOnly)
 
 
    });

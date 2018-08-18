@@ -70,7 +70,18 @@
     text-align: center;
     font-size: 36px;
   }
-  
+
+  mat-card-actions {
+    text-align: center;
+    color: #ffde03;
+    font-size: 20px;
+  }  
+
+  .material-icons {
+    font-size: 48px;
+
+  }
+
   .title-center {
     flex: 1 1 auto;
     text-align: center;

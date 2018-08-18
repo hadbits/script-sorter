@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" class="center">
     <span class="title-center">Transcript Sorter</span>
-    <mat-checkbox *ngIf="currentEntry"  class="" [checked]="isReadOnly" >Read Only</mat-checkbox>
+    <mat-checkbox *ngIf="currentEntry"  class="" [checked]="isReadOnly" (change)="switchReadOnly($event);" >Read Only</mat-checkbox>
     <button   mat-raised-button color="accent" (click)="OpenFile()" >
       Open File
     </button>

@@ -8,20 +8,28 @@ import { Transcription } from '../models/transcription';
 export class TranscriptionDataService {
 
   
-  transcriotionSource = new BehaviorSubject<Transcription>(null);
-  currentTranscription  = this.transcriotionSource.asObservable();
+  transcriptionSource = new BehaviorSubject<Transcription>(null);
+  currentTranscription  = this.transcriptionSource.asObservable();
 
+  readOnlyStatus = new BehaviorSubject<boolean>(false);
+  currentReadOnlyStatus  = this.readOnlyStatus.asObservable();
 
   constructor() { }
 
 
+  // loadNewTranscription(transcription : Transcription)  {
+  //   console.log("TranscriptionDataService - loadNewTranscription");    
+  //   this.transcriptionSource.next(transcription);
+  // }
+
   updateTranscription(transcription : Transcription)  {
-
-    console.log("TranscriptionDataService");    
-    this.transcriotionSource.next(transcription);
-
-
+    console.log("TranscriptionDataService - updateTranscription");    
+    this.transcriptionSource.next(transcription);
   }
 
+  setReadOnlyStatus(isReadOnly : boolean) {
+    console.log("TranscriptionDataService - isReadOnly");    
+    this.readOnlyStatus.next(isReadOnly);
+  }
 
 }

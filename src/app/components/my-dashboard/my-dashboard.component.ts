@@ -46,20 +46,32 @@ export class MyDashboardComponent  {
   ngOnInit() {
     this.transcriptionDataSvc.currentTranscription.subscribe((trnscrpt) => {
       if (trnscrpt)  {
-        this.onFileRead(trnscrpt);
+        this.onTranscriptionUpdate(trnscrpt);
       }
     });
+
+    this.transcriptionDataSvc.currentReadOnlyStatus.subscribe((readOnlyStatus) => {
+        this.isReadOnly = readOnlyStatus;
+        console.log("===> " + readOnlyStatus);
+    });
+
   };
 
 
-  onFileRead( transcription : Transcription) {
+  onTranscriptionUpdate( transcription : Transcription) {
 
     this.transcription = transcription;
 
     this.keywords = this.transcription.keywords;
     
     this.currentEntityIndex = 0;
+
+    if (transcription.currentEntity != 0 ) {
+      this.currentEntityIndex = transcription.currentEntity;
+    }
+    
     this.currentEntry = this.transcription.content[this.currentEntityIndex];
+
   }
 
 
@@ -77,15 +89,17 @@ export class MyDashboardComponent  {
     switch (this.pressedKey) {
       case 'ArrowUp':
       case 'ArrowLeft': 
-        this.currentEntityIndex--;
-        if (this.currentEntityIndex < 0) {this.currentEntityIndex = 0;}
-        this.currentEntry = this.transcription.content[this.currentEntityIndex];
+        //this.currentEntityIndex--;
+        //if (this.currentEntityIndex < 0) {this.currentEntityIndex = 0;}
+        //this.currentEntry = this.transcription.content[this.currentEntityIndex];
+        this.proceedToEntityByIncrement(-1);
         break;
       case 'ArrowRight': 
       case 'ArrowDown': 
-        this.currentEntityIndex++;
-        if (this.currentEntityIndex > this.transcription.content.length - 1) {this.currentEntityIndex = this.transcription.content.length - 1;}
-        this.currentEntry = this.transcription.content[this.currentEntityIndex];
+        //this.currentEntityIndex++;
+        //if (this.currentEntityIndex > this.transcription.content.length - 1) {this.currentEntityIndex = this.transcription.content.length - 1;}
+        //this.currentEntry = this.transcription.content[this.currentEntityIndex];
+        this.proceedToEntityByIncrement(1);
         break; 
       case '1':
       case '2':
@@ -103,6 +117,29 @@ export class MyDashboardComponent  {
         break;
 
     }
+
+  }
+
+  
+  proceedToEntityByIncrement(increment : number) {
+    this.currentEntityIndex += increment;
+    if (this.currentEntityIndex < 0) {
+      this.currentEntityIndex = 0;
+    }
+    
+    if (this.currentEntityIndex > this.transcription.content.length - 1) {
+      this.currentEntityIndex = this.transcription.content.length - 1;
+    }
+    this.transcription.currentEntity = this.currentEntityIndex;
+    this.currentEntry = this.transcription.content[this.currentEntityIndex];  
+
+    console.log(!this.isReadOnly)
+
+    if (!this.isReadOnly && increment > 0 ) {
+      this.transcription.content[this.currentEntityIndex].keywords = this.transcription.content[this.currentEntityIndex-1].keywords;
+    }
+
+    console.log(this.transcription);
 
   }
   
@@ -144,6 +181,7 @@ export class MyDashboardComponent  {
     }
 
     this.transcription.content[this.currentEntityIndex].keywords = kwds;
+
     this.transcriptionDataSvc.updateTranscription(this.transcription);
     console.log(this.transcription);
 
@@ -156,8 +194,7 @@ export class MyDashboardComponent  {
     }
     else {
       this.assignKeywordToCurrentEntry(index, false);
-    }
-    
+    }    
   }
 
   isKeywordAssigned(keyword : string) : boolean {
@@ -170,6 +207,9 @@ export class MyDashboardComponent  {
       return false;
     }
   }
+
+
+
 
 
 
