@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { clipboard, ipcRenderer, dialog, remote} from 'electron';
 import { Transcription} from '../../models/transcription';
 import { ScriptEntity} from '../../models/script-entity';
+import { Router} from '@angular/router';
 
 import * as fs from 'fs';
 import { TranscriptionDataService } from '../../providers/transcription-data.service';
@@ -31,7 +32,7 @@ export class HeaderToolbarComponent implements OnInit {
   currentEntry : any;
   latestKeyword : string;
 
-  constructor(private transcriptionDataSvc : TranscriptionDataService ) { 
+  constructor(private transcriptionDataSvc : TranscriptionDataService , private router : Router) { 
     this.isReadOnly = false;
     
     this.transcription = new Transcription;
@@ -177,6 +178,11 @@ export class HeaderToolbarComponent implements OnInit {
     );
 
   } 
+
+
+  viewFile() {
+    //this.router.navigate(['view-file']);
+  }
 
   // fileOpened(event, response) {
   //   console.log("File Opened captured");
