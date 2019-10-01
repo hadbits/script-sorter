@@ -1,0 +1,6 @@
+
+  <mat-grid-list class="keyword-checkboxes" cols="3" rowHeight="3:1">
+    <mat-grid-tile *ngFor="let keyword of keywords; index as i" >
+      <mat-checkbox class="keyword-margin"> {{keyword}}</mat-checkbox>
+    </mat-grid-tile>
+  </mat-grid-list>

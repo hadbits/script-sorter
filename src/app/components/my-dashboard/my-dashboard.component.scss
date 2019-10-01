@@ -1,0 +1,121 @@
+  
+  
+  .grid-container {
+    margin: 20px;
+  }
+  
+
+
+  .mat-toolbar .mat-checkbox {
+    font-size:12px;
+    color:orange;
+    margin: 0 10px;
+
+    background-color : transparent;
+    padding: inherit;
+    color: inherit;
+    box-shadow: inherit; 
+  }
+
+  .keyword-checkboxes {
+    background-color: teal;
+  }
+
+  mat-checkbox {
+    font-size: 18px;
+    border-radius: 4px;
+    /*border: 1px solid #AAA;*/
+    background-color: lightgray;
+    padding: 10px;
+    color: #333;
+    box-shadow: 1px 2px 2px;
+  }
+
+  .mat-checkbox-checked {
+    /*border: 1px solid gray;*/
+    border-radius: 4px;
+    background-color: lightblue;
+    color: #000000;
+    box-shadow: -1px -1px 1px
+  }
+
+  .mat-card {
+    background-color:#546E7A;
+    color: #fff;
+  }
+  
+  .mat-card-title {
+    /*background-color:#ffde03;*/
+    color: #ffde03;
+    margin: 0 20px;
+    cursor:grab;
+  }
+  
+  
+  .dashboard-card {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+  }
+  
+  .more-button {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+  }
+  
+  .dashboard-card-content {
+    text-align: center;
+    font-size: 36px;
+  }
+
+  mat-card-actions {
+    text-align: center;
+    color: #ffde03;
+    font-size: 20px;
+  }  
+
+  .material-icons {
+    font-size: 48px;
+
+  }
+
+  .title-center {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  
+  .keyword-form {
+    width: 200px;
+  }
+  
+  
+  .keyword-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+  
+  .keyword-margin {
+    margin: 15px 15px;
+  }
+  
+  .keyword-number {
+    font-size: 50px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    margin: 10px 10px;
+    opacity: .75;
+  }
+
+  
+  .read-only-mode {
+    background-color : transparent;
+    padding: inherit;
+    color: inherit;
+    box-shadow: inherit;    
+  }
