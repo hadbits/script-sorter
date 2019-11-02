@@ -8,11 +8,11 @@ import { ScriptEntity } from '../../models/script-entity';
 
 
 @Component({
-  selector: 'app-keyword-view',
-  templateUrl: './keyword-view.component.html',
-  styleUrls: ['./keyword-view.component.scss']
+  selector: 'search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.scss']
 })
-export class KeywordViewComponent implements OnInit {
+export class SearchComponent implements OnInit {
 
   transcription: Transcription;
   keywords: string[];
@@ -21,38 +21,32 @@ export class KeywordViewComponent implements OnInit {
 
   filteredTranscriptsEntities: ScriptEntity[];
 
-  tags = new FormControl();
+  searchText = new FormControl();
   // formParent = new FormGroup({ snoozeReason: new FormControl() });
 
+
   constructor(private transcriptionDataSvc: TranscriptionDataService) { }
+
+  filterBySearchString(e: Event) {
+    console.log(this.searchText.value.toUpperCase())
+    this.filteredTranscriptsEntities = this.transcription.content;
+    console.log(this.transcription.content)
+    this.filteredTranscriptsEntities = this.filteredTranscriptsEntities.filter(entity =>
+      entity.text.toUpperCase().includes(this.searchText.value.toUpperCase())
+    );
+    console.log(this.filteredTranscriptsEntities)
+  }
 
   ngOnInit() {
     this.transcriptionDataSvc.currentTranscription.subscribe((trnscrpt) => {
       if (trnscrpt) {
         this.onTranscriptionUpdate(trnscrpt);
-        console.log('keyword view');
-        console.log(this.tags.value);
+        console.log('search view');
+        console.log(this.searchText.value);
         this.filteredTranscriptsEntities = this.transcription.content;
 
       }
     });
-  }
-
-  copyTimestamp(val: string) {
-    clipboard.writeText(val);
-  }
-
-
-
-  filterByTags(e: Event) {
-    console.log("chnaged")
-    this.filteredTranscriptsEntities = this.transcription.content;
-    this.tags.value.forEach(tag =>
-      this.filteredTranscriptsEntities = this.filteredTranscriptsEntities.filter(entity =>
-        entity.keywords.includes(tag)
-      )
-    );
-    console.log(this.filteredTranscriptsEntities)
   }
 
   onTranscriptionUpdate(transcription: Transcription) {
@@ -70,5 +64,11 @@ export class KeywordViewComponent implements OnInit {
     this.currentEntry = this.transcription.content[this.currentEntityIndex];
 
   }
+
+  copyTimestamp(val: string) {
+    clipboard.writeText(val);
+  }
+
+
 
 }

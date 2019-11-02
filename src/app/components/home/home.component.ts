@@ -8,7 +8,9 @@ import { TranscriptionDataService } from '../../providers/transcription-data.ser
 })
 export class HomeComponent implements OnInit {
 
-  constructor( private transcriptionDataSvc : TranscriptionDataService ) { }
+  constructor(private transcriptionDataSvc: TranscriptionDataService) { }
+
+  selectedTab = 0;
 
   ngOnInit() {
     //console.log("Home init");
@@ -16,5 +18,9 @@ export class HomeComponent implements OnInit {
       //console.log("home gets transciption");      
     });
   };
+
+  selectTab(event) {
+    this.selectedTab = event;
+  }
 
 }

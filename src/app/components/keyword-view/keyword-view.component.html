@@ -1,6 +1,18 @@
+<div class="grid-container">
+  <mat-form-field>
+    <mat-label>Select a tag</mat-label>
+    <mat-select [formControl]="tags" multiple (selectionChange)="filterByTags($event);">
+      <mat-option *ngFor="let keyword of keywords; index as i" [value]="keyword">{{keyword}}</mat-option>
+    </mat-select>
+  </mat-form-field>
 
-  <mat-grid-list class="keyword-checkboxes" cols="3" rowHeight="3:1">
-    <mat-grid-tile *ngFor="let keyword of keywords; index as i" >
-      <mat-checkbox class="keyword-margin"> {{keyword}}</mat-checkbox>
-    </mat-grid-tile>
-  </mat-grid-list>
+  <mat-list class="tagged-entries">
+    <mat-list-item *ngFor="let entity of filteredTranscriptsEntities; index as i">
+      <a mat-raised-button (click)="copyTimestamp(entity.startTime)">{{entity.startTime}}</a>
+      {{entity.text}}
+    </mat-list-item>
+    <mat-divider></mat-divider>
+  </mat-list>
+
+
+</div>

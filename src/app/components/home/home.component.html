@@ -1,6 +1,28 @@
+<app-header-toolbar></app-header-toolbar>
 
-<app-header-toolbar ></app-header-toolbar>
+<mat-tab-group (selectedIndexChange)="selectTab($event)" (keydown)="$event.stopPropagation()">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">format_list_numbered</mat-icon>
+            Sort
+        </ng-template>
+        <my-dashboard *ngIf="selectedTab === 0"></my-dashboard>
+    </mat-tab>
 
-<my-dashboard></my-dashboard>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">bookmarks</mat-icon>
+            View by Tag
+        </ng-template>
+        <app-keyword-view *ngIf="selectedTab ===  1"></app-keyword-view>
+    </mat-tab>
 
-<app-keyword-view></app-keyword-view>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">search</mat-icon>
+            Search
+        </ng-template>
+
+        <search *ngIf="selectedTab ===  2"></search>
+    </mat-tab>
+</mat-tab-group>

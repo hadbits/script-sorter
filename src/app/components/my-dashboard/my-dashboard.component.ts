@@ -1,9 +1,9 @@
-import { Component, HostListener  } from '@angular/core';
+import { Component, HostListener, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
-import { clipboard, ipcRenderer, dialog, remote} from 'electron';
-import { Transcription} from '../../models/transcription';
-import { ScriptEntity} from '../../models/script-entity';
+import { clipboard, ipcRenderer, dialog, remote } from 'electron';
+import { Transcription } from '../../models/transcription';
+import { ScriptEntity } from '../../models/script-entity';
 
 import * as fs from 'fs';
 import { TranscriptionDataService } from '../../providers/transcription-data.service';
@@ -14,62 +14,66 @@ import { TranscriptionDataService } from '../../providers/transcription-data.ser
   templateUrl: './my-dashboard.component.html',
   styleUrls: ['./my-dashboard.component.scss']
 })
-export class MyDashboardComponent  {
+export class MyDashboardComponent {
   /** Based on the screen size, switch from standard to one column per row */
 
-  transcriptionSubscription : any;
-  
-  cards : any[];
-  isReadOnly : boolean;
+  @ViewChild("dashboardCurrEntry", { read: ElementRef, static: false })
+  dashboardCurrEntry: ElementRef;
 
-  arrEntities : any[];
+  transcriptionSubscription: any;
+
+  cards: any[];
+  isReadOnly: boolean;
+
+  arrEntities: any[];
   arrTimeText: any[];
   arrTime: any[];
   currentEntityIndex: number;
-  keywords : string[];
+  keywords: string[];
 
-  transcription : Transcription;
+  transcription: Transcription;
 
-  currentEntry : any;
-  latestKeyword : string;
+  currentEntry: any;
+  latestKeyword: string;
 
-  pressedKey : any;
+  pressedKey: any;
 
 
-  constructor(private breakpointObserver: BreakpointObserver, private transcriptionDataSvc : TranscriptionDataService) {
-    
-    console.log(this.cards);
-    console.log(ipcRenderer);
+  constructor(private breakpointObserver: BreakpointObserver, private transcriptionDataSvc: TranscriptionDataService) {
+
+    // console.log(this.cards);
+    // console.log(ipcRenderer);
 
   }
 
   ngOnInit() {
     this.transcriptionDataSvc.currentTranscription.subscribe((trnscrpt) => {
-      if (trnscrpt)  {
+      if (trnscrpt) {
         this.onTranscriptionUpdate(trnscrpt);
       }
     });
 
     this.transcriptionDataSvc.currentReadOnlyStatus.subscribe((readOnlyStatus) => {
-        this.isReadOnly = readOnlyStatus;
-        console.log("===> " + readOnlyStatus);
+      this.isReadOnly = readOnlyStatus;
+      // console.log("===> " + readOnlyStatus);
     });
 
   };
 
 
-  onTranscriptionUpdate( transcription : Transcription) {
+
+  onTranscriptionUpdate(transcription: Transcription) {
 
     this.transcription = transcription;
 
     this.keywords = this.transcription.keywords;
-    
+
     this.currentEntityIndex = 0;
 
-    if (transcription.currentEntity != 0 ) {
+    if (transcription.currentEntity != 0) {
       this.currentEntityIndex = transcription.currentEntity;
     }
-    
+
     this.currentEntry = this.transcription.content[this.currentEntityIndex];
 
   }
@@ -77,30 +81,30 @@ export class MyDashboardComponent  {
 
 
   copyTimestamp() {
-    clipboard.writeText(this.currentEntry.startTime);   
+    clipboard.writeText(this.currentEntry.startTime);
   }
 
   @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) { 
+  handleKeyboardEvent(event: KeyboardEvent) {
     this.pressedKey = event.key;
-    //console.log(this.pressedKey);
+    console.log(this.pressedKey);
 
-    
+
     switch (this.pressedKey) {
       case 'ArrowUp':
-      case 'ArrowLeft': 
+      case 'ArrowLeft':
         //this.currentEntityIndex--;
         //if (this.currentEntityIndex < 0) {this.currentEntityIndex = 0;}
         //this.currentEntry = this.transcription.content[this.currentEntityIndex];
         this.proceedToEntityByIncrement(-1);
         break;
-      case 'ArrowRight': 
-      case 'ArrowDown': 
+      case 'ArrowRight':
+      case 'ArrowDown':
         //this.currentEntityIndex++;
         //if (this.currentEntityIndex > this.transcription.content.length - 1) {this.currentEntityIndex = this.transcription.content.length - 1;}
         //this.currentEntry = this.transcription.content[this.currentEntityIndex];
         this.proceedToEntityByIncrement(1);
-        break; 
+        break;
       case '1':
       case '2':
       case '3':
@@ -120,42 +124,42 @@ export class MyDashboardComponent  {
 
   }
 
-  
-  proceedToEntityByIncrement(increment : number) {
+
+  proceedToEntityByIncrement(increment: number) {
     this.currentEntityIndex += increment;
     if (this.currentEntityIndex < 0) {
       this.currentEntityIndex = 0;
     }
-    
+
     if (this.currentEntityIndex > this.transcription.content.length - 1) {
       this.currentEntityIndex = this.transcription.content.length - 1;
     }
     this.transcription.currentEntity = this.currentEntityIndex;
-    this.currentEntry = this.transcription.content[this.currentEntityIndex];  
+    this.currentEntry = this.transcription.content[this.currentEntityIndex];
 
-    console.log(!this.isReadOnly)
+    // console.log(!this.isReadOnly)
 
-    if (!this.isReadOnly && increment > 0 ) {
-      this.transcription.content[this.currentEntityIndex].keywords = this.transcription.content[this.currentEntityIndex-1].keywords;
+    if (!this.isReadOnly && increment > 0) {
+      this.transcription.content[this.currentEntityIndex].keywords = this.transcription.content[this.currentEntityIndex - 1].keywords;
     }
 
-    console.log(this.transcription);
+    // console.log(this.transcription);
 
   }
-  
+
 
 
   addKeyword() {
     if (this.latestKeyword != "" && !this.keywords.includes(this.latestKeyword)) {
       this.keywords.push(this.latestKeyword);
-      this.assignKeywordToCurrentEntry(this.keywords.length-1, true);
-      this.latestKeyword = "";      
+      this.assignKeywordToCurrentEntry(this.keywords.length - 1, true);
+      this.latestKeyword = "";
     }
-    //console.log(this.keywords);    
+    //console.log(this.dashboardCurrEntry);    
   };
 
-  assignKeywordToCurrentEntry(pressedKey : number, isAssign: boolean) {
-    let kwds : String = this.transcription.content[this.currentEntityIndex].keywords;
+  assignKeywordToCurrentEntry(pressedKey: number, isAssign: boolean) {
+    let kwds: String = this.transcription.content[this.currentEntityIndex].keywords;
     if (isAssign) {
       if (this.transcription.content.length > 0 && this.keywords.length > pressedKey) {
         if (kwds == "") {
@@ -167,38 +171,42 @@ export class MyDashboardComponent  {
             kwds += this.keywords[pressedKey];
           }
           else {
-            kwds = kwds.slice(0, -1);            
-          }          
+            kwds = kwds.slice(0, -1);
+          }
         }
       }
     }
     else {
       kwds += ",";
-      console.log(kwds);
+      // console.log(kwds);
       kwds = kwds.replace(this.keywords[pressedKey] + ",", "");
       kwds = kwds.slice(0, -1);
-      console.log(kwds);
+      // console.log(kwds);
     }
 
     this.transcription.content[this.currentEntityIndex].keywords = kwds;
 
     this.transcriptionDataSvc.updateTranscription(this.transcription);
-    console.log(this.transcription);
+    // console.log(this.transcription);
+
+    this.dashboardCurrEntry.nativeElement.focus();
+
 
   }
 
 
-  isKeywordChecked(index: number, event : any) {
+  isKeywordChecked(index: number, event: any) {
     if (event.checked) {
       this.assignKeywordToCurrentEntry(index, true);
     }
     else {
       this.assignKeywordToCurrentEntry(index, false);
-    }    
+    }
+    console.log(event);
   }
 
-  isKeywordAssigned(keyword : string) : boolean {
-    let currEntyKeywords : string = this.currentEntry.keywords;
+  isKeywordAssigned(keyword: string): boolean {
+    let currEntyKeywords: string = this.currentEntry.keywords;
     currEntyKeywords = "," + currEntyKeywords + ",";
     if (currEntyKeywords.includes("," + keyword + ",")) {
       return true;

@@ -1,9 +1,32 @@
 /* Structure */
-table {
+
+  .grid-container {
+  margin: 40px 100px ;
+  }
+
+  table {
     width: 100%;
   }
   
   .mat-form-field {
     font-size: 14px;
     width: 100%;
+  }
+
+  .tag-h3 {
+    margin-right: 30px;
+    background-color: #ffde03;
+    color: #666;
+    padding: 5px;
+    cursor: grab;
+
+    &:hover {
+      background-color: #ffffff;
+    }
+  }
+
+
+  .tagged-entries a {
+    margin-right: 20px;
+    cursor: grab;
   }

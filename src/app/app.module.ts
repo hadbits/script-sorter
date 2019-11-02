@@ -3,7 +3,7 @@ import '../polyfills';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
@@ -37,7 +37,9 @@ import {
   MatButtonToggleModule,
   MatCheckboxModule,
   MatTableModule,
-  MatTableDataSource
+  MatTableDataSource,
+  MatTabsModule,
+  MatSelectModule
 } from '@angular/material';
 
 import { HomeComponent } from './components/home/home.component';
@@ -45,6 +47,7 @@ import { MyDashboardComponent } from './components/my-dashboard/my-dashboard.com
 import { KeywordViewComponent } from './components/keyword-view/keyword-view.component';
 import { HeaderToolbarComponent } from './components/header-toolbar/header-toolbar.component';
 import { TranscriptionDataService } from './providers/transcription-data.service';
+import { SearchComponent } from './components/search/search.component';
 
 
 
@@ -60,7 +63,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     WebviewDirective,
     MyDashboardComponent,
     KeywordViewComponent,
-    HeaderToolbarComponent
+    HeaderToolbarComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
@@ -88,6 +92,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatButtonToggleModule,
     MatCheckboxModule,
     MatTableModule,
+    MatTabsModule,
+    MatSelectModule,
+    ReactiveFormsModule,
     //MatTableDataSource
   ],
   providers: [

@@ -1,0 +1,18 @@
+<div class="grid-container">
+
+    <mat-form-field class="example-form-field">
+        <input matInput type="text" [formControl]="searchText" placeholder="Search for word" [(ngModel)]="value"
+            (keyup)="filterBySearchString($event);">
+        <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <mat-list class="searched-entries">
+        <mat-list-item *ngFor="let entity of filteredTranscriptsEntities; index as i">
+            <a mat-raised-button (click)="copyTimestamp(entity.startTime)">{{entity.startTime}}</a>
+            {{entity.text}}
+        </mat-list-item>
+        <mat-divider></mat-divider>
+    </mat-list>
+</div>

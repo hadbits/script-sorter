@@ -11,7 +11,15 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'view-file',
+    path: 'view',
+    component: HomeComponent
+  },
+  {
+    path: 'search',
+    component: HomeComponent
+  },
+  {
+    path: 'app-keyword-view',
     component: KeywordViewComponent
   }
 ];

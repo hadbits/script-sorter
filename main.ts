@@ -198,7 +198,7 @@ ipcMain.on('open-file-dialog', function (event, data) {
       filters: [
         {
           name: 'Subtitle Edit or Script Sorter Files',
-          extensions: ['txt', 'sst']
+          extensions: ['txt', 'sst', 'srt']
         }
       ]
 

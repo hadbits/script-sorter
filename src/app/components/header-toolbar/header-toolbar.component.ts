@@ -104,6 +104,7 @@ export class HeaderToolbarComponent implements OnInit {
         item = new ScriptEntity();
         item.id = i;
         item.keywords = "";
+        item.text = "";
 
         this.arrTimeText.forEach((timeText, k) => {
           if (timeText != "" && timeText.search(/\d{2}:/i) > -1) {
